@@ -1,3 +1,10 @@
+<!-- 
+  Introductory Comment
+    Members: 
+    1. Dulin, Andrea Eliza M.
+    2. Javier, Darryl B.
+-->
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,12 +13,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2-PDA Simulator</title>
     <link rel="icon" href="./public/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="./styles/index.css" />
+    <link rel="stylesheet" href="simulator.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./scripts/index.js"></script>
   </head>
 
   <body>
-    
+    <form action = "" method = "get">
+      <div class = "table">
+        <table>
+          <tr> 
+            <th> Current State </th>
+            <th> Next State </th>
+            <th> Input </th>
+            <th> Stack 1 OP </th>
+            <th> Stack 2 OP </th>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+          <tr> 
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
+            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          </tr>
+        </table>
+  
+        <!-- String -->
+        <input class = "entries" type = "text" placeholder="Enter string"> 
+  
+         <!-- Inputs -->
+         <input class = "entries" type = "text" placeholder="Enter possible inputs separated by comma"> 
+  
+         <!-- Symbols -->
+         <input class = "entries" type = "text" placeholder="Enter possible symbols separated by comma"> 
+
+        <center> 
+          <button id = "submit-bttn" type = "submit"> Submit </button>
+          <button id = "clear-bttn"> Clear </button>
+        </center>
+      </div> 
+    </form>
   </body>
 </html>
