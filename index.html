@@ -11,82 +11,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>2-PDA Simulator</title>
-    <link rel="icon" href="./public/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="simulator.css" />
+    <title>2-PDA</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="index.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="./scripts/index.js"></script>
+    <script src="./index.js"></script>
   </head>
 
   <body>
-    <form action = "" method = "get">
-      <div class = "table">
-        <table>
-          <tr> 
-            <th> Current State </th>
-            <th> Next State </th>
-            <th> Input </th>
-            <th> Stack 1 OP </th>
-            <th> Stack 2 OP </th>
+    <div class="inputDiv">
+      <div class="transitionTableDiv">
+        <table class="transition-table">
+          <tr>
+            <th>Current State</th>
+            <th>Next State</th>
+            <th>Input</th>
+            <th>Stack 1 OP</th>
+            <th>Stack 2 OP</th>
           </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-          </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-          </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-          </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-          </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-          </tr>
-          <tr> 
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
-            <td>  <input class = "input" type = "text" placeholder = "input"> </td>
-            <td> <input class = "input" type = "text" placeholder = "input"> </td>
+          <tbody class="transition-list"></tbody>
+          <tr class="transition-row">
+            <td colspan="100%"><button class="addTransition">+</button></td>
           </tr>
         </table>
-  
-        <!-- String -->
-        <input class = "entries" type = "text" placeholder="Enter string"> 
-  
-         <!-- Inputs -->
-         <input class = "entries" type = "text" placeholder="Enter possible inputs separated by comma"> 
-  
-         <!-- Symbols -->
-         <input class = "entries" type = "text" placeholder="Enter possible symbols separated by comma"> 
+      </div>
 
-        <center> 
-          <button id = "submit-bttn" type = "submit"> Submit </button>
-          <button id = "clear-bttn"> Clear </button>
+      <div class="pdaInputDiv">
+        <div style="display: flex; flex-direction: column">
+          <input
+            class="input-string entries"
+            type="text"
+            placeholder="Enter test input string"
+          />
+
+          <input
+            class="input-symbols entries"
+            type="text"
+            placeholder="Enter possible inputs separated by comma"
+          />
+
+          <input
+            class="stack-symbols entries"
+            type="text"
+            placeholder="Enter possible symbols separated by comma"
+          />
+        </div>
+
+        <center>
+          <button class="submit">Submit</button>
+          <button class="clear">Clear</button>
         </center>
-      </div> 
-    </form>
+      </div>
+    </div>
+
+    <div class="simulationDiv">
+      <div class="stackTableDiv">
+        <table class="stackTable">
+          <tr>
+            <th>Input String</th>
+          </tr>
+
+          <tbody class="inputStack"></tbody>
+        </table>
+      </div>
+      <div class="stackTableDiv">
+        <table class="stackTable">
+          <tr>
+            <th>Stack 1</th>
+          </tr>
+          <tbody class="stack1"></tbody>
+        </table>
+      </div>
+      <div class="stackTableDiv">
+        <table class="stackTable">
+          <tr>
+            <th>Stack 2</th>
+          </tr>
+          <tbody class="stack2"></tbody>
+        </table>
+      </div>
+
+      <div class="simulationOptions">
+        <button id="previous-input">Previous Input</button>
+        <button id="back-to-start">Back To Start</button>
+        <button id="next-input">Next Input</button>
+        <button id="edit">Edit PDA Input</button>
+
+        <h1 class="verdict">Verdict: Rejected/Accepted</h1>
+        <h1 class="action">Action:</h1>
+      </div>
+
+      <div class="stateDiv">
+        <div class="stateCircle">State 0</div>
+        <p>Red if initial</p>
+        <p>Green if final</p>
+        <p>Yellow if neither</p>
+      </div>
+    </div>
   </body>
 </html>

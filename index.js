@@ -1,52 +1,69 @@
 $(document).ready(() => {
-  $("#PDAForm").submit(function (event) {
-    event.preventDefault();
+  const transitions = [
+    { currState: "", nextState: "", input: "", stack1: "", stack2: "" },
+  ];
+  let transitionRowCount = 0;
 
-    const transitionInputs = [{curr}]
-    const inputSymbols = $("#input-symbols").val();
-    const stackSymbols = $("#stack-symbols").val();
-    const inputString = $("#input-string").val();
-    const transitions = [{currState: '', nextState: '', input: '', stack1: '', stack2: ''}];
+  const createTransitionTableRow = (transition) => {
+    var element = "";
 
-    transitions.forEach((transition) => {
-        Object.keys(transition).forEach((key) => {
-            const tableRow = $('<tr>');
-                const tableCell = $('<td>');
-                const inputField = $('<input>', {
-                    type: 'text',
-                    id: key,
-                    name: key
-                });
-
-                tableCell.append(inputField);
-                tableRow.append(tableCell);
-            
-            $("#transition-table tbody").append(tableRow);
-        })
-    })
-
-    $("#transition-table tr").each(function () {
-      const transition = {};
-      transition.currState = $("#current-state").val().trim();
-      transition.nextState = $("#next-state").val().trim();
-      transition.input = $("#state-input").val().trim();
-      transition.stack1 = $("#stack1-op").val().trim();
-      transition.stack2 = $("#stack2-op").val().trim();
-
-      transitions.push(transition);
+    Object.keys(transition).forEach((key) => {
+      element += `<td><input type="text" id="${key}" name="${key}"></td>`; // corrected HTML
     });
 
-    $(this).trigger("reset");
+    return element;
+  };
 
-    window.location.href = `simulation.html?isym=${encodeURIComponent(
-      inputSymbols
-    )}&ssym=${encodeURIComponent(stackSymbols)}&s=${encodeURIComponent(
-      inputString
-    )}&t=${encodeURIComponent(JSON.stringify(transitions))}`;
+  transitions.forEach((transition) => {
+    $(".transition-list").append(
+      `<tr class="transition-row-${transitionRowCount}">${createTransitionTableRow(
+        transition
+      )}</tr>`
+    );
+    transitionRowCount++;
   });
 
+  const clearInputs = () => $(input).val("");
 
-  $("#addTransition").click(function (event) {
-    
+  $(".submit").click(function () {
+    const inputSymbols = $(".input-symbols").val();
+    const stackSymbols = $(".stack-symbols").val();
+    const inputString = $(".input-string").val();
+    const inputTransitions = [];
+
+    $(".transition-list tr").each(function (index, element) {
+      const rowClass = $(element).attr("class");
+      const transition = {};
+      transition.currState = $(`.${rowClass} #currState`).val().trim();
+      transition.nextState = $(`.${rowClass} #nextState`).val().trim();
+      transition.input = $(`.${rowClass} #input`).val().trim();
+      transition.stack1 = $(`.${rowClass} #stack1`).val().trim();
+      transition.stack2 = $(`.${rowClass} #stack2`).val().trim();
+
+      inputTransitions.push(transition);
+    });
+    /*  clearInputs(); */
   });
-});     
+
+  $(".addTransition").click(function (event) {
+    const newTransition = {
+      currState: "",
+      nextState: "",
+      input: "",
+      stack1: "",
+      stack2: "",
+    };
+
+    $(".transition-list").append(
+      `<tr class="transition-row-${transitionRowCount}">${createTransitionTableRow(
+        newTransition
+      )}</tr>`
+    );
+
+    transitionRowCount++;
+  });
+
+  $(".clear").click(function (event) {
+    clearInputs();
+  });
+});
