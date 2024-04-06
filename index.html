@@ -55,8 +55,28 @@
             type="text"
             placeholder="Enter possible symbols separated by comma"
           />
+
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <input
+              class="initialState entries"
+              type="text"
+              placeholder="Enter initial state"
+            />
+            <input
+              class="finalState entries"
+              type="text"
+              placeholder="Enter final state"
+            />
+          </div>
         </div>
 
+        <p class="error-message"></p>
         <center>
           <button class="submit">Submit</button>
           <button class="clear">Clear</button>
@@ -80,6 +100,9 @@
             <th>Stack 1</th>
           </tr>
           <tbody class="stack1"></tbody>
+          <tr>
+            <td>Z0</td>
+          </tr>
         </table>
       </div>
       <div class="stackTableDiv">
@@ -88,16 +111,19 @@
             <th>Stack 2</th>
           </tr>
           <tbody class="stack2"></tbody>
+          <tr>
+            <td>Z1</td>
+          </tr>
         </table>
       </div>
 
       <div class="simulationOptions">
-        <button id="previous-input">Previous Input</button>
-        <button id="back-to-start">Back To Start</button>
-        <button id="next-input">Next Input</button>
-        <button id="edit">Edit PDA Input</button>
+        <button id="previous-input" disabled>Previous Input</button>
+        <button id="next-input" disabled>Next Input</button>
+        <button id="back-to-start" disabled>Back To Start</button>
+        <button id="edit" disabled>Edit PDA Input</button>
 
-        <h1 class="verdict">Verdict: Rejected/Accepted</h1>
+        <h1 class="verdict">Verdict:</h1>
         <h1 class="action">Action:</h1>
       </div>
 
