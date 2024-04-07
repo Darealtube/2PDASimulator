@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guide</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="guide.css" />
+  </head>
+
+  <body>
+    <div class="welcome">
+      <h1>Welcome to our 2-PDA Simulator</h1>
+      <h2>by Darryl Javier and Andrea Dulin</h2>
+      <p><a href="./index.html">Back to simulator</a></p>
+    </div>
+
+    <div class="guide">
+      <h3>Hello! Welcome to our guide on how to use our simulator.</h3>
+
+      <p>
+        Before we begin, we would like to mention that this simulator was done
+        in a span of 3 days, so the design is not next-level, but the
+        functionality is working properly. This 2-PDA Guide will help you know
+        what to input in the transition tables, in the textfields, and also in
+        simulation. Without further ado, here is the guide for the 2-PDA
+        Simulator.
+      </p>
+
+      <p>
+        The 2-PDA simulator has two parts. It has the input part in which you
+        define the "definition" of the 2-PDA machine:
+      </p>
+
+      <image
+        src="./guideAssets/1.png"
+        height="400px"
+        width="100%"
+        alt="guide"
+      />
+
+      <p>
+        And the bottom part which is the simulation part, in which the machine
+        will execute according to the definition and the input string:
+      </p>
+
+      <image
+        src="./guideAssets/2.png"
+        height="400px"
+        width="100%"
+        alt="guide"
+      />
+
+      <p>
+        The input part of the simulator is the only interactable part of the
+        page initially. That is because you cannot possibly simulate "nothing".
+        The textfields to the right of the transition table already gives you a
+        clue as to what you'll put there. However, there are some key things to
+        remember.
+      </p>
+
+      <ul>
+        <li>
+          In the input string textfield, you can choose to not input anything.
+          This would function as an empty input.
+        </li>
+        <li>
+          In the possible inputs textfield, you absolutely must type your
+          possible inputs in between commas, and if you have inputs for example
+          "a", and you have another input which is "aa", you must include both
+          "a" and "aa" in the list.
+        </li>
+        <li>
+          In the possible stack symbols textfield, the initial symbols of the
+          stacks are Z0 and Z1. Which means that these are already included in
+          the list (no need to list them). If you have stack symbols for example
+          "a", and you have another input which is "aa", you must include both
+          "a" and "aa" in the list.
+        </li>
+        <li>Inputs are case-sensitive.</li>
+      </ul>
+
+      <p>
+        That is all there is to take note about the right side part of the input
+        part. Now, we will focus on the transition table.
+      </p>
+
+      <image
+        src="./guideAssets/3.png"
+        height="400px"
+        width="100%"
+        alt="guide"
+      />
+
+      <p>
+        This is the transition table. Each row in the transition table has 5
+        rows. You can add more rows by clicking the tiny + button below the rows
+        of the table. Here are the requirements for each textfield of each row:
+      </p>
+
+      <ul>
+        <li>
+          Current State: a single input string containing the name of the state
+        </li>
+        <li>
+          Next State: a single input string containing the name of the state it
+          goes to after a certain input
+        </li>
+        <li>
+          Input: the input that could be read by the state to perform
+          transitions
+        </li>
+        <li>
+          Stack 1 OP(eration): the operation to be performed to stack 1 on
+          transition (symbol to replace);(symbol to replace with)
+        </li>
+        <li>
+          Stack 2 OP(eration): the operation to be performed to stack 2 on
+          transition (symbol to replace);(symbol to replace with)
+        </li>
+      </ul>
+
+      <p>
+        Now that we know what to input in those textfields, there are some
+        crucial things to note:
+      </p>
+
+      <ul>
+        <li>Input can be left blank. (empty input)</li>
+        <li>
+          There are four kinds of stack operation that you can input. These are:
+          <ul>
+            <li>
+              (blank);(blank) or simply ; - This means do nothing (replace empty
+              with empty)
+            </li>
+            <li>
+              (blank);(symbol) - This means add to the stack (replace empty with
+              symbol)
+            </li>
+            <li>
+              (symbol);(blank) - This means remove from the stack (replace
+              symbol with empty)
+            </li>
+            <li>(symbol);(symbol) - The usual</li>
+          </ul>
+        </li>
+        <li>
+          When doing stack operations, symbols like "aa" for example will not
+          add two "a" into the stack (if that is what you are planning to do).
+          Use (blank);a instead to add "a". It's actually more simplified that
+          way and will make your life easier.
+        </li>
+      </ul>
+
+      <p>This is an example of a good and valid transition table:</p>
+
+      <image
+        src="./guideAssets/4.png"
+        height="400px"
+        width="100%"
+        alt="guide"
+      />
+
+      <p>
+        These notes are important to keep in mind in order for your machine to
+        be simulated properly. Don't worry, if there is something wrong in your
+        input, when you click submit it will tell you that there is an error and
+        will not let you simulate the machine.
+      </p>
+
+      <p>
+        Now let us move on to the simulation part. The simulation starts at the
+        initial state with no input string being read. When an input string is
+        being read, the input character on the input string stack will be
+        highlighted. Then the verdict will be displayed which would be if it's
+        accepted or rejected, the action part will display what operation
+        happened, and the state when the input is read will also be displayed.
+        This part is pretty simple as there are only four controls which have a
+        very straightforward functionality:
+      </p>
+
+      <ul>
+        <li>
+          Previous Input - Goes back to the previous input in the simulation
+        </li>
+        <li>Next Input - Proceeds to the next input in the simulation</li>
+        <li>Back to Start - Resets the simulation</li>
+        <li>
+          Edit PDA Input - Resets the simulation and enables the input part so
+          you'd be able to change your definition (disables simulation)
+        </li>
+      </ul>
+
+      <p>
+        The simulator prioritizes transitions that have inputs over blank
+        inputs. If two transitions have the same input, it will choose the next
+        state based on which transition's stack operations appeals to the top of
+        the stack of both stacks. If you find that you're clicking next input
+        but it's not doing anything, it's either you've reached the end of the
+        machine simulation or the current state cannot go to another state using
+        the next input string, which means that the input string is rejected.
+      </p>
+
+      <p>
+        And that is it for the guide! If you have any other concerns or there is
+        a bug within the simulator, please contact us:
+      </p>
+
+      <p>Darryl Javier: darryl_javier@dlsu.edu.ph</p>
+      <p>Andrea Dulin: andrea_dulin@dlsu.edu.ph</p>
+    </div>
+  </body>
+</html>

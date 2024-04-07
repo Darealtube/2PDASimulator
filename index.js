@@ -145,7 +145,11 @@ $(document).ready(() => {
     var allInputsFilled = true;
     inputs.each(function () {
       let inputString = $(this).val();
-      if (inputString.trim() === "" && $(this).attr("id") != "input") {
+      if (
+        inputString.trim() === "" &&
+        $(this).attr("id") != "input" &&
+        $(this).attr("class") != "input-string entries"
+      ) {
         allInputsFilled = false;
         return false; // Exit the loop early if any input is empty
       }
