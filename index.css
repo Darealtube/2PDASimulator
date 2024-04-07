@@ -107,7 +107,7 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e63946;
+  background-color: #E76F51;
   color: white;
   font-weight: 800;
 }
@@ -118,6 +118,7 @@ p {
 }
 
 .error-message {
+  margin-top: 8px;
   color: red;
   opacity: 0;
 }

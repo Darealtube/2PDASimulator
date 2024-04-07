@@ -27,7 +27,8 @@ $(document).ready(() => {
   let currState = definition.initialState;
 
   // For simulation "cache" to not recalculate simulation again.
-  const simulationHistory = [];
+  let simulationHistoryIndex = 0;
+  let simulationHistory = [];
 
   // END OF VARIABLE DEFINITIONS
 
@@ -95,6 +96,13 @@ $(document).ready(() => {
     verdict = definition.initialState == definition.finalState;
     action = "";
     currState = definition.initialState;
+
+    $(".stateCircle").text(currState);
+    if (currState == definition.initialState) {
+      $(".stateCircle").css("background-color", "#E76F51");
+    } else if (currState == definition.finalState) {
+      $(".stateCircle").css("background-color", "#588157");
+    } else $(".stateCircle").css("background-color", "#e9c46a");
   };
 
   // Depopulates the definition object (When going back to input part)
@@ -106,11 +114,25 @@ $(document).ready(() => {
     definition.inputString = [];
     definition.inputTransitions = [];
     currInputIndex = -1;
+    simulationHistoryIndex = -1;
     stack1 = ["Z0"];
     stack2 = ["Z1"];
+    simulationHistory = [];
     verdict = "";
     action = "";
     currState = "";
+  };
+
+  // Updates the stack based on the stack array values (Used when state is changed)
+  const updateStackDisplay = () => {
+    $(".stack1 tr").remove();
+    stack1.forEach((char) => {
+      $(".stack1").append(`<tr><td>${char}</td></tr>`);
+    });
+    $(".stack2 tr").remove();
+    stack2.forEach((char) => {
+      $(".stack2").append(`<tr><td>${char}</td></tr>`);
+    });
   };
 
   // Validates input parts input textfields
@@ -262,10 +284,12 @@ $(document).ready(() => {
       // populate the definition object (for simulation)
       // disable all textfields in the input part
       // enable the simulation part
+      // initializes the display of the stacks
       populateInputStack();
       populateDefinition();
       disableInputting();
       enableSimulation();
+      updateStackDisplay();
       $(".error-message").css("opacity", 0);
     } else resetValues(); // Otherwise reset the values of the input part variables (but not the textfields)
   });
@@ -286,28 +310,9 @@ $(document).ready(() => {
   // END OF INPUTTING FUNCTIONALITIES
 
   // START OF SIMULATION FUNCTIONALITIES
-
-  const addHistory = () => {
-    const newHistory = {
-      currState,
-      currInputIndex,
-      stack1,
-      stack2,
-      action,
-      verdict,
-    };
-
-    simulationHistory.push(newHistory);
-  };
-
-  // Updates the stack based on the stack array values (Used when state is changed)
-  const updateStackDisplay = () => {
-    stack1.forEach((char) => {
-      $(".stack1").append(`<tr><td>${char}</td></tr>`);
-    });
-    stack2.forEach((char) => {
-      $(".stack2").append(`<tr><td>${char}</td></tr>`);
-    });
+  const highlightInputStringRow = (index) => {
+    $(`.inputStack td`).css("background-color", "antiquewhite");
+    $(`.inputStack .input-${index}`).css("background-color", "#588157");
   };
 
   // Enables inputting again (When edit PDA is clicked)
@@ -330,8 +335,8 @@ $(document).ready(() => {
     $("#edit").prop("disabled", true);
     $(".verdict").text("Verdict: ");
     $(".action").text("Action: ");
-    $(".stateCircle").text("State 0");
-    $(".stateCircle").css("background-color", "#e63946");
+    $(".stateCircle").text("");
+    $(".stateCircle").css("background-color", "#E76F51");
   };
 
   // Triggers when Edit PDA is clicked
@@ -347,38 +352,31 @@ $(document).ready(() => {
 
   // Triggers when next input button is clicked
   $("#next-input").click(function () {
-    // Change input string stack highlight
-    if (currInputIndex < definition.inputString.length - 1) {
-      currInputIndex++;
-      $(`.inputStack .input-${currInputIndex - 1}`).css(
-        "background-color",
-        "antiquewhite"
-      );
-      $(`.inputStack .input-${currInputIndex}`).css(
-        "background-color",
-        "#588157"
-      );
-    }
-
-    // Check cache first if the current simulation already exists.
-    if (simulationHistory[currInputIndex]) {
-      const nextSimulationData = simulationHistory[currInputIndex];
-
+    // Check the cache first if this part of the simulation is already done.
+    if (simulationHistory[simulationHistoryIndex + 1]) {
+      let nextSimulationData = simulationHistory[simulationHistoryIndex + 1];
+      simulationHistoryIndex++;
+      currInputIndex = nextSimulationData.currInputIndex;
       stack1 = nextSimulationData.stack1;
       stack2 = nextSimulationData.stack2;
       verdict = nextSimulationData.verdict;
       action = nextSimulationData.action;
       currState = nextSimulationData.currState;
 
-      $(".verdict").text(`Verdict: ${verdict}`);
+      $(".verdict").text(
+        `Verdict: ${
+          currState == definition.finalState ? "Accepted" : "Rejected"
+        }`
+      );
       $(".action").text(`Action: ${action}`);
       $(".stateCircle").text(currState);
       if (currState == definition.initialState) {
-        $(".stateCircle").css("background-color", "#e63946");
+        $(".stateCircle").css("background-color", "#E76F51");
       } else if (currState == definition.finalState) {
         $(".stateCircle").css("background-color", "#588157");
       } else $(".stateCircle").css("background-color", "#e9c46a");
       updateStackDisplay();
+      highlightInputStringRow(currInputIndex);
       return;
     }
 
@@ -393,25 +391,37 @@ $(document).ready(() => {
     });
 
     // For each possible transitions (that are currState), filter the states
-    possibleStateOperations.filter((state) => {
+    possibleStateOperations = possibleStateOperations.filter((state) => {
       const stackOp1 = state.stack1.split(";").map((char) => char.trim());
       const stackOp2 = state.stack2.split(";").map((char) => char.trim());
-      const stack1Top = stack1[stack1.length - 1];
-      const stack2Top = stack2[stack2.length - 1];
+      const stack1Top = stack1[0];
+      const stack2Top = stack2[0];
 
       // Only include the states in which the input is equal to the input that has been received.
       // Only include the states in which the stack operations appeal to the symbols on top of both stacks.
-      if (
-        state.input == definition.inputString[currInputIndex] &&
-        stackOp1[0] == stack1Top &&
-        stackOp2[0] == stack2Top
-      )
-        return true;
+      return (
+        (state.input == definition.inputString[currInputIndex + 1] ||
+          state.input == "") &&
+        (stackOp1[0] == stack1Top || stackOp1[0] == "") &&
+        (stackOp2[0] == stack2Top || stackOp2[0] == "")
+      );
     });
 
-    console.log(possibleStateOperations);
     // If there are no states that can be transitioned to from this state, do not execute the next state.
-    if (possibleStateOperations.length == 0) return;
+    if (possibleStateOperations.length == 0) {
+      highlightInputStringRow(currInputIndex);
+      return;
+    }
+
+    // Prioritize with inputs than no inputs
+    if (
+      possibleStateOperations.some((op) => op.input == "") &&
+      possibleStateOperations.some((op) => op.input != "")
+    ) {
+      possibleStateOperations = possibleStateOperations.filter((state) => {
+        return state.input != "";
+      });
+    }
 
     // Operate on stacks
     possibleStateOperations.forEach((operation) => {
@@ -454,6 +464,14 @@ $(document).ready(() => {
       // Let the user know what happened
       action = `${operation.stack1}, ${operation.stack2}`;
       $(".action").text(`Action: ${action}`);
+
+      // Don't change input highlight when it's an empty input
+      if (operation.input == "") {
+        highlightInputStringRow(currInputIndex);
+      } else {
+        currInputIndex++;
+        highlightInputStringRow(currInputIndex);
+      }
     });
 
     // Update the stack1 and stack2 table rows to reflect the updated stacks
@@ -469,7 +487,7 @@ $(document).ready(() => {
     // If final state: green
     // If neither: yellow
     if (currState == definition.initialState) {
-      $(".stateCircle").css("background-color", "#e63946");
+      $(".stateCircle").css("background-color", "#E76F51");
     } else if (currState == definition.finalState) {
       $(".stateCircle").css("background-color", "#588157");
     } else $(".stateCircle").css("background-color", "#e9c46a");
@@ -479,60 +497,79 @@ $(document).ready(() => {
     $(".verdict").text(`Verdict: ${verdict}`);
 
     // Add this to the simulation history for cache
-    addHistory();
+    const newHistory = {
+      currState,
+      currInputIndex,
+      stack1: Array.from(stack1),
+      stack2: Array.from(stack2),
+      action,
+      verdict,
+    };
+
+    simulationHistory.push(newHistory);
+    simulationHistoryIndex++;
   });
 
   // Triggers when prev input button is clicked
   $("#previous-input").click(function () {
-    // Change input string stack highlight
-    if (currInputIndex > -1) {
-      currInputIndex--;
-      $(`.inputStack .input-${currInputIndex + 1}`).css(
-        "background-color",
-        "antiquewhite"
-      );
-      $(`.inputStack .input-${currInputIndex}`).css(
-        "background-color",
-        "#588157"
-      );
-    }
-
-    if (currInputIndex == -1) {
+    // Reset the simulation once reached 0
+    if (currInputIndex == 0) {
+      currInputIndex = -1;
+      simulationHistoryIndex = -1;
       stack1 = ["Z0"];
       stack2 = ["Z1"];
       verdict = definition.initialState == definition.finalState;
       action = "";
       currState = definition.initialState;
 
-      $(".verdict").text(`Verdict: ${verdict}`);
+      $(".inputStack td").css("background-color", "antiquewhite");
+      $(".verdict").text(
+        `Verdict: ${
+          currState == definition.finalState ? "Accepted" : "Rejected"
+        }`
+      );
       $(".action").text(`Action: ${action}`);
       $(".stateCircle").text(currState);
-      $(".stateCircle").css("background-color", "#e63946");
+      $(".stateCircle").css("background-color", "#E76F51");
       updateStackDisplay();
     } else {
-      const prevSimulationData = simulationHistory[currInputIndex];
-
+      // Use the cache to get previous simulation
+      let prevSimulationData = simulationHistory[simulationHistoryIndex - 1];
+      currInputIndex = prevSimulationData.currInputIndex;
       stack1 = prevSimulationData.stack1;
       stack2 = prevSimulationData.stack2;
       verdict = prevSimulationData.verdict;
       action = prevSimulationData.action;
       currState = prevSimulationData.currState;
 
-      $(".verdict").text(`Verdict: ${currState == definition.finalState ? "Accepted" : "Rejected"}`);
+      $(".verdict").text(
+        `Verdict: ${
+          currState == definition.finalState ? "Accepted" : "Rejected"
+        }`
+      );
       $(".action").text(`Action: ${action}`);
       $(".stateCircle").text(currState);
       if (currState == definition.initialState) {
-        $(".stateCircle").css("background-color", "#e63946");
+        $(".stateCircle").css("background-color", "#E76F51");
       } else if (currState == definition.finalState) {
         $(".stateCircle").css("background-color", "#588157");
       } else $(".stateCircle").css("background-color", "#e9c46a");
       updateStackDisplay();
+
+      simulationHistoryIndex--;
+      if (currInputIndex - 1 == simulationHistoryIndex) {
+        currInputIndex--;
+      }
+
+      highlightInputStringRow(currInputIndex);
     }
   });
 
+  // Reset the simulation back to start
   $("#back-to-start").click(function () {
     $(`.inputStack td`).css("background-color", "antiquewhite");
 
+    simulationHistoryIndex = -1;
     currInputIndex = -1;
 
     stack1 = ["Z0"];
@@ -541,10 +578,12 @@ $(document).ready(() => {
     action = "";
     currState = definition.initialState;
 
-    $(".verdict").text(`Verdict: ${currState == definition.finalState ? "Accepted" : "Rejected"}`);
+    $(".verdict").text(
+      `Verdict: ${currState == definition.finalState ? "Accepted" : "Rejected"}`
+    );
     $(".action").text(`Action: ${action}`);
     $(".stateCircle").text(currState);
-    $(".stateCircle").css("background-color", "#e63946");
+    $(".stateCircle").css("background-color", "#E76F51");
     updateStackDisplay();
   });
 
